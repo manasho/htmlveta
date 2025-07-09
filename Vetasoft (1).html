@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vetasoft - Sistema Veterinario</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Arial", sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        color: #333;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .header {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 20px 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .logo {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #667eea;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .nav-buttons {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      .btn-secondary {
+        background: rgba(255, 255, 255, 0.9);
+        color: #667eea;
+        border: 2px solid #667eea;
+      }
+
+      .btn-secondary:hover {
+        background: #667eea;
+        color: white;
+        transform: translateY(-2px);
+      }
+
+      .btn-danger {
+        background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+        color: white;
+      }
+
+      .btn-success {
+        background: linear-gradient(135deg, #51cf66, #40c057);
+        color: white;
+      }
+
+      .main-content {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        min-height: 500px;
+      }
+
+      .section {
+        display: none;
+      }
+      .section.active {
+        display: block;
+        animation: fadeIn 0.5s ease;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .hero {
+        text-align: center;
+        padding: 60px 20px;
+      }
+      .hero h1 {
+        font-size: 3rem;
+        margin-bottom: 20px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .hero p {
+        font-size: 1.2rem;
+        color: #666;
+        margin-bottom: 30px;
+      }
+
+      .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+      .data-table th,
+      .data-table td {
+        padding: 15px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+      }
+      .data-table th {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        font-weight: 600;
+      }
+      .data-table tr:hover {
+        background: rgba(102, 126, 234, 0.1);
+      }
+      .data-table .actions-cell {
+        display: flex;
+        gap: 5px;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(5px);
+      }
+      .modal.active {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .modal-content {
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
+        width: 90%;
+        max-width: 500px;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      }
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #eee;
+      }
+      .modal-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #667eea;
+      }
+      .close {
+        font-size: 2rem;
+        cursor: pointer;
+        color: #999;
+        transition: color 0.3s ease;
+      }
+      .close:hover {
+        color: #667eea;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+      }
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: border-color 0.3s ease;
+      }
+      .form-group input:focus,
+      .form-group select:focus,
+      .form-group textarea:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      .auth-container {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 40px;
+      }
+      .auth-title {
+        text-align: center;
+        font-size: 2rem;
+        margin-bottom: 30px;
+        color: #667eea;
+      }
+
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #eee;
+      }
+      .section-title {
+        font-size: 2rem;
+        color: #667eea;
+        font-weight: bold;
+      }
+
+      .user-welcome {
+        font-weight: 600;
+        color: #667eea;
+      }
+
+      .protected-section {
+        text-align: center;
+        padding: 60px 20px;
+      }
+      .protected-section h2 {
+        color: #667eea;
+        margin-bottom: 20px;
+      }
+      .protected-section p {
+        color: #666;
+        margin-bottom: 30px;
+      }
+
+      .status-badge {
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+      .status-available {
+        background: #d4edda;
+        color: #155724;
+      }
+      .status-pending {
+        background: #fff3cd;
+        color: #856404;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <div class="logo">🐾 Vetasoft</div>
+        <nav class="nav-buttons">
+          <div id="mainMenu" class="menu-section">
+            <button class="btn btn-primary" onclick="showSection('home')">
+              🏠 Inicio
+            </button>
+            <button class="btn btn-secondary" onclick="showSection('pets')">
+              🐕 Mascotas
+            </button>
+            <button
+              class="btn btn-secondary"
+              onclick="showSection('adoptions')"
+            >
+              ❤️ Adopciones
+            </button>
+            <button
+              class="btn btn-secondary"
+              onclick="showSection('appointments')"
+            >
+              📅 Citas
+            </button>
+            <button class="btn btn-secondary" onclick="showSection('medical')">
+              📋 H. Clínica
+            </button>
+            <button
+              class="btn btn-secondary"
+              onclick="showSection('donations')"
+            >
+              💰 Donaciones
+            </button>
+          </div>
+          <div id="authButtons">
+            <div id="unauthenticatedMenu" style="display: flex; gap: 15px">
+              <button
+                class="btn btn-primary"
+                onclick="showSection('auth'); toggleRegister(false)"
+              >
+                👤 Ingresar
+              </button>
+              <button
+                class="btn btn-secondary"
+                onclick="showSection('auth'); toggleRegister(true)"
+              >
+                📝 Registrarse
+              </button>
+            </div>
+            <div
+              id="authenticatedMenu"
+              style="display: none; align-items: center; gap: 15px"
+            >
+              <span id="welcomeText" class="user-welcome"></span>
+              <button class="btn btn-danger" onclick="logout()">
+                🚪 Salir
+              </button>
+            </div>
+          </div>
+        </nav>
+      </header>
+
+      <main class="main-content">
+        <section id="home" class="section active">
+          <div class="hero">
+            <h1>Bienvenido a Vetasoft</h1>
+            <p>
+              El sistema veterinario más completo para el cuidado de tus
+              mascotas
+            </p>
+            <button class="btn btn-primary" onclick="showSection('pets')">
+              Comenzar
+            </button>
+          </div>
+        </section>
+        <section id="pets" class="section">
+          <div id="petsContent"></div>
+        </section>
+        <section id="adoptions" class="section">
+          <div id="adoptionsContent"></div>
+        </section>
+        <section id="appointments" class="section">
+          <div id="appointmentsContent"></div>
+        </section>
+        <section id="medical" class="section">
+          <div id="medicalContent"></div>
+        </section>
+        <section id="donations" class="section">
+          <div id="donationsContent"></div>
+        </section>
+        <section id="auth" class="section">
+          <!-- FORMULARIO DE INICIO DE SESIÓN -->
+          <div class="auth-container" id="loginContainer">
+            <h2 class="auth-title">Iniciar Sesión</h2>
+            <form id="loginForm">
+              <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" required />
+              </div>
+              <div class="form-group">
+                <label for="password">Contraseña:</label>
+                <input type="password" id="password" required />
+              </div>
+              <button type="submit" class="btn btn-primary" style="width: 100%">
+                Ingresar
+              </button>
+            </form>
+            <p style="text-align: center; margin-top: 20px">
+              ¿No tienes cuenta?
+              <a
+                href="#"
+                onclick="toggleRegister(true)"
+                style="color: #667eea; font-weight: bold"
+                >Regístrate</a
+              >
+            </p>
+          </div>
+
+          <!-- FORMULARIO DE REGISTRO -->
+          <div
+            class="auth-container"
+            id="registerContainer"
+            style="display: none"
+          >
+            <h2 class="auth-title">Registro de Usuario</h2>
+            <form id="registerForm">
+              <div class="form-group">
+                <label for="registerName">Nombre:</label>
+                <input type="text" id="registerName" required />
+              </div>
+              <div class="form-group">
+                <label for="registerEmail">Email:</label>
+                <input type="email" id="registerEmail" required />
+              </div>
+              <div class="form-group">
+                <label for="registerPassword">Contraseña:</label>
+                <input type="password" id="registerPassword" required />
+              </div>
+              <button type="submit" class="btn btn-success" style="width: 100%">
+                Crear Cuenta
+              </button>
+            </form>
+            <p style="text-align: center; margin-top: 20px">
+              ¿Ya tienes cuenta?
+              <a
+                href="#"
+                onclick="toggleRegister(false)"
+                style="color: #667eea; font-weight: bold"
+                >Iniciar sesión</a
+              >
+            </p>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="genericModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="modalTitle" class="modal-title">Título del Modal</h2>
+          <span class="close" onclick="closeModal()">&times;</span>
+        </div>
+        <div id="modalBody"></div>
+      </div>
+    </div>
+
+    <script>
+      // --- ESTADO DE LA APLICACIÓN Y DATOS ---
+      let isLoggedIn = false;
+      let currentUser = null;
+      let currentSection = "home";
+
+      // Datos de ejemplo
+      let mockUsers = JSON.parse(localStorage.getItem("vetasoftUsers")) || [
+        {
+          id: 1,
+          name: "Dr. Admin",
+          email: "admin@vetasoft.com",
+          password: "1234",
+        },
+      ];
+
+      function saveUsersToStorage() {
+        localStorage.setItem("vetasoftUsers", JSON.stringify(mockUsers));
+      }
+
+      let petsData = [
+        {
+          id: 1,
+          name: "Rex",
+          species: "Perro",
+          breed: "Labrador",
+          age: 3,
+          owner: "Juan Pérez",
+        },
+        {
+          id: 2,
+          name: "Mimi",
+          species: "Gato",
+          breed: "Siamés",
+          age: 2,
+          owner: "María García",
+        },
+      ];
+
+      let appointmentsData = [
+        {
+          id: 1,
+          date: "2025-07-10",
+          time: "10:00",
+          petId: 1,
+          reason: "Consulta general",
+          status: "Confirmada",
+        },
+        {
+          id: 2,
+          date: "2025-07-12",
+          time: "14:30",
+          petId: 2,
+          reason: "Vacunación",
+          status: "Pendiente",
+        },
+      ];
+
+      let donationsData = [
+        { id: 1, donor: "Ana López", amount: 50000, date: "2025-07-01" },
+      ];
+      let medicalRecords = [
+        {
+          id: 1,
+          petName: "Rex",
+          diagnosis: "Otitis",
+          treatment: "Antibióticos",
+          vet: "Dr. Admin",
+        },
+      ];
+      let adoptionsData = [
+        {
+          id: 1,
+          petName: "Luna",
+          species: "Gato",
+          age: 1,
+          adopter: "Carlos Ramírez",
+        },
+      ];
+
+      // --- FUNCIONES DE NAVEGACIÓN Y VISTAS ---
+      function showSection(sectionId) {
+        const protectedSections = [
+          "pets",
+          "adoptions",
+          "appointments",
+          "medical",
+          "donations",
+        ];
+
+        if (protectedSections.includes(sectionId) && !isLoggedIn) {
+          alert("Debes iniciar sesión para acceder a esta sección.");
+          showSection("auth");
+          return;
+        }
+
+        document
+          .querySelectorAll(".section")
+          .forEach((section) => section.classList.remove("active"));
+        document.getElementById(sectionId).classList.add("active");
+        currentSection = sectionId;
+
+        if (isLoggedIn) {
+          loadSectionContent(sectionId);
+        } else {
+          // Limpiar contenido si no está logueado
+          protectedSections.forEach((id) => {
+            const contentDiv = document.getElementById(id + "Content");
+            if (contentDiv) contentDiv.innerHTML = createProtectedContentHTML();
+          });
+        }
+        updateNavButtons(sectionId);
+      }
+
+      function updateNavButtons(activeSectionId) {
+        const sectionNames = {
+          home: "Inicio",
+          pets: "Mascotas",
+          adoptions: "Adopciones",
+          appointments: "Citas",
+          medical: "H. Clínica",
+          donations: "Donaciones",
+          auth: "Ingresar",
+        };
+        const menuButtons = document.querySelectorAll("#mainMenu .btn");
+        menuButtons.forEach((btn) => {
+          const buttonSection = Array.from(btn.classList)
+            .join(" ")
+            .includes(
+              Object.keys(sectionNames).find((key) =>
+                btn.textContent.includes(sectionNames[key])
+              )
+            );
+          if (btn.textContent.includes(sectionNames[activeSectionId])) {
+            btn.classList.remove("btn-secondary");
+            btn.classList.add("btn-primary");
+          } else {
+            btn.classList.remove("btn-primary");
+            btn.classList.add("btn-secondary");
+          }
+        });
+      }
+
+      function loadSectionContent(sectionId) {
+        switch (sectionId) {
+          case "pets":
+            renderPets();
+            break;
+          case "appointments":
+            renderAppointments();
+            break;
+          // Agrega aquí las llamadas a las otras funciones de renderizado
+          case "adoptions":
+            renderAdoptions();
+            break;
+
+          case "medical":
+            renderMedical();
+            break;
+
+          case "donations":
+            renderDonations();
+            break;
+
+          // const contentDiv = document.getElementById(sectionId + "Content");
+          // contentDiv.innerHTML = `
+          //             <div class="section-header">
+          //                <h2 class="section-title">Sección en Construcción</h2>
+          //             </div>
+          //             <p>Esta funcionalidad aún no ha sido implementada.</p>
+          //         `;
+          // break;
+        }
+      }
+      function renderDonations() {
+        const contentDiv = document.getElementById("donationsContent");
+        const rows = donationsData
+          .map(
+            (d) => `
+        <tr>
+            <td>${d.donor}</td>
+            <td>$${d.amount.toLocaleString()}</td>
+            <td>${d.date}</td>
+            <td class="actions-cell">
+                <button class="btn btn-danger" onclick="deleteDonation(${
+                  d.id
+                })">🗑️</button>
+            </td>
+        </tr>`
+          )
+          .join("");
+
+        contentDiv.innerHTML = `
+        <div class="section-header">
+            <h2 class="section-title">Donaciones</h2>
+            <button class="btn btn-success" onclick="addDonation()">➕ Nueva Donación</button>
+        </div>
+        <table class="data-table">
+            <thead><tr><th>Donante</th><th>Monto</th><th>Fecha</th><th>Acciones</th></tr></thead>
+            <tbody>${rows}</tbody>
+        </table>`;
+      }
+
+      function addDonation() {
+        openModal(
+          "Registrar Donación",
+          `
+        <form id="donationForm">
+            <div class="form-group"><label>Donante:</label><input type="text" id="donorName" required></div>
+            <div class="form-group"><label>Monto:</label><input type="number" id="donationAmount" required></div>
+            <div class="form-group"><label>Fecha:</label><input type="date" id="donationDate" required></div>
+            <button type="submit" class="btn btn-primary" style="width: 100%">Guardar</button>
+        </form>`
+        );
+
+        document.getElementById("donationForm").onsubmit = (e) => {
+          e.preventDefault();
+          donationsData.push({
+            id: Date.now(),
+            donor: document.getElementById("donorName").value,
+            amount: parseFloat(document.getElementById("donationAmount").value),
+            date: document.getElementById("donationDate").value,
+          });
+          renderDonations();
+          closeModal();
+        };
+      }
+
+      function deleteDonation(id) {
+        if (confirm("¿Eliminar esta donación?")) {
+          donationsData = donationsData.filter((d) => d.id !== id);
+          renderDonations();
+        }
+      }
+
+      function renderMedical() {
+        const contentDiv = document.getElementById("medicalContent");
+        const rows = medicalRecords
+          .map(
+            (r) => `
+        <tr>
+            <td>${r.petName}</td>
+            <td>${r.diagnosis}</td>
+            <td>${r.treatment}</td>
+            <td>${r.vet}</td>
+            <td class="actions-cell">
+                <button class="btn btn-danger" onclick="deleteMedical(${r.id})">🗑️</button>
+            </td>
+        </tr>`
+          )
+          .join("");
+
+        contentDiv.innerHTML = `
+        <div class="section-header">
+            <h2 class="section-title">Historia Clínica</h2>
+            <button class="btn btn-success" onclick="addMedical()">➕ Nuevo Registro</button>
+        </div>
+        <table class="data-table">
+            <thead><tr><th>Mascota</th><th>Diagnóstico</th><th>Tratamiento</th><th>Veterinario</th><th>Acciones</th></tr></thead>
+            <tbody>${rows}</tbody>
+        </table>`;
+      }
+
+      function addMedical() {
+        openModal(
+          "Nuevo Registro Médico",
+          `
+        <form id="medicalForm">
+            <div class="form-group"><label>Nombre de la Mascota:</label><input type="text" id="medPetName" required></div>
+            <div class="form-group"><label>Diagnóstico:</label><input type="text" id="medDiagnosis" required></div>
+            <div class="form-group"><label>Tratamiento:</label><input type="text" id="medTreatment" required></div>
+            <div class="form-group"><label>Veterinario:</label><input type="text" id="medVet" required></div>
+            <button type="submit" class="btn btn-primary" style="width: 100%">Guardar</button>
+        </form>`
+        );
+
+        document.getElementById("medicalForm").onsubmit = (e) => {
+          e.preventDefault();
+          medicalRecords.push({
+            id: Date.now(),
+            petName: document.getElementById("medPetName").value,
+            diagnosis: document.getElementById("medDiagnosis").value,
+            treatment: document.getElementById("medTreatment").value,
+            vet: document.getElementById("medVet").value,
+          });
+          renderMedical();
+          closeModal();
+        };
+      }
+
+      function deleteMedical(id) {
+        if (confirm("¿Eliminar este registro médico?")) {
+          medicalRecords = medicalRecords.filter((r) => r.id !== id);
+          renderMedical();
+        }
+      }
+
+      function renderAdoptions() {
+        const contentDiv = document.getElementById("adoptionsContent");
+        const rows = adoptionsData
+          .map(
+            (ad) => `
+        <tr>
+            <td>${ad.petName}</td>
+            <td>${ad.species}</td>
+            <td>${ad.age} años</td>
+            <td>${ad.adopter}</td>
+            <td class="actions-cell">
+                <button class="btn btn-danger" onclick="deleteAdoption(${ad.id})">🗑️</button>
+            </td>
+        </tr>`
+          )
+          .join("");
+
+        contentDiv.innerHTML = `
+        <div class="section-header">
+            <h2 class="section-title">Adopciones</h2>
+            <button class="btn btn-success" onclick="addAdoption()">➕ Nueva Adopción</button>
+        </div>
+        <table class="data-table">
+            <thead>
+                <tr><th>Mascota</th><th>Especie</th><th>Edad</th><th>Adoptante</th><th>Acciones</th></tr>
+            </thead>
+            <tbody>${rows}</tbody>
+        </table>`;
+      }
+
+      function addAdoption() {
+        openModal(
+          "Registrar Adopción",
+          `
+        <form id="adoptionForm">
+            <div class="form-group"><label>Nombre de la Mascota:</label><input type="text" id="adPetName" required></div>
+            <div class="form-group"><label>Especie:</label><input type="text" id="adPetSpecies" required></div>
+            <div class="form-group"><label>Edad:</label><input type="number" id="adPetAge" required></div>
+            <div class="form-group"><label>Adoptante:</label><input type="text" id="adAdopter" required></div>
+            <button type="submit" class="btn btn-primary" style="width: 100%">Guardar</button>
+        </form>`
+        );
+
+        document.getElementById("adoptionForm").onsubmit = (e) => {
+          e.preventDefault();
+          adoptionsData.push({
+            id: Date.now(),
+            petName: document.getElementById("adPetName").value,
+            species: document.getElementById("adPetSpecies").value,
+            age: document.getElementById("adPetAge").value,
+            adopter: document.getElementById("adAdopter").value,
+          });
+          renderAdoptions();
+          closeModal();
+        };
+      }
+
+      function deleteAdoption(id) {
+        if (confirm("¿Eliminar esta adopción?")) {
+          adoptionsData = adoptionsData.filter((a) => a.id !== id);
+          renderAdoptions();
+        }
+      }
+
+      function createProtectedContentHTML() {
+        return `
+                <div class="protected-section">
+                    <h2>🔒 Contenido Protegido</h2>
+                    <p>Por favor, inicia sesión para ver esta sección.</p>
+                    <button class="btn btn-primary" onclick="showSection('auth')">Ir a Iniciar Sesión</button>
+                </div>`;
+      }
+
+      // --- LÓGICA DE AUTENTICACIÓN ---
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
+          const user = mockUsers.find(
+            (u) => u.email === email && u.password === password
+          );
+
+          if (user) {
+            isLoggedIn = true;
+            currentUser = user;
+            updateAuthInterface();
+            showSection("pets");
+            alert("¡Inicio de sesión exitoso!");
+          } else {
+            alert("Email o contraseña incorrectos.");
+          }
+        });
+
+      function logout() {
+        if (confirm("¿Estás seguro de que deseas cerrar sesión?")) {
+          isLoggedIn = false;
+          currentUser = null;
+          updateAuthInterface();
+          showSection("home");
+          alert("Sesión cerrada exitosamente");
+        }
+      }
+
+      function updateAuthInterface() {
+        // Menús de autenticación
+        const unauthenticatedMenu = document.getElementById(
+          "unauthenticatedMenu"
+        );
+        const authenticatedMenu = document.getElementById("authenticatedMenu");
+        const welcomeText = document.getElementById("welcomeText");
+
+        // Elemento del menú principal que queremos ocultar/mostrar
+        const mainMenu = document.getElementById("mainMenu"); // <-- LÍNEA NUEVA
+
+        if (isLoggedIn) {
+          // Muestra los menús para usuarios autenticados
+          mainMenu.style.display = "flex"; // <-- LÍNEA NUEVA
+          unauthenticatedMenu.style.display = "none";
+          authenticatedMenu.style.display = "flex";
+          welcomeText.textContent = `Bienvenido, ${currentUser.name}`;
+        } else {
+          // Oculta los menús si el usuario no está autenticado
+          mainMenu.style.display = "none"; // <-- LÍNEA NUEVA
+          unauthenticatedMenu.style.display = "flex";
+          authenticatedMenu.style.display = "none";
+          welcomeText.textContent = "";
+        }
+
+        // Se mantiene el resto de la función para actualizar las secciones
+        const protectedSections = [
+          "pets",
+          "adoptions",
+          "appointments",
+          "medical",
+          "donations",
+        ];
+        protectedSections.forEach((id) => showSection(currentSection));
+      }
+
+      // --- RENDERIZADO DE CONTENIDO DINÁMICO ---
+      function renderPets() {
+        const contentDiv = document.getElementById("petsContent");
+        let tableRows = petsData
+          .map(
+            (pet) => `
+                <tr>
+                    <td>${pet.name}</td>
+                    <td>${pet.species}</td>
+                    <td>${pet.breed}</td>
+                    <td>${pet.age} años</td>
+                    <td>${pet.owner}</td>
+                    <td class="actions-cell">
+                        <button class="btn btn-primary" onclick="editPet(${pet.id})">✏️</button>
+                        <button class="btn btn-danger" onclick="deletePet(${pet.id})">🗑️</button>
+                    </td>
+                </tr>
+            `
+          )
+          .join("");
+
+        contentDiv.innerHTML = `
+                <div class="section-header">
+                    <h2 class="section-title">Gestión de Mascotas</h2>
+                    <button class="btn btn-success" onclick="addPet()">➕ Agregar Mascota</button>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th> <th>Especie</th> <th>Raza</th> <th>Edad</th> <th>Propietario</th> <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>${tableRows}</tbody>
+                </table>`;
+      }
+
+      function renderAppointments() {
+        const contentDiv = document.getElementById("appointmentsContent");
+        const getPetName = (petId) =>
+          petsData.find((p) => p.id === petId)?.name || "N/A";
+        let tableRows = appointmentsData
+          .map(
+            (ap) => `
+                <tr>
+                    <td>${ap.date}</td>
+                    <td>${ap.time}</td>
+                    <td>${getPetName(ap.petId)}</td>
+                    <td>${ap.reason}</td>
+                    <td><span class="status-badge ${
+                      ap.status === "Confirmada"
+                        ? "status-available"
+                        : "status-pending"
+                    }">${ap.status}</span></td>
+                    <td class="actions-cell">
+                        <button class="btn btn-primary" onclick="editAppointment(${
+                          ap.id
+                        })">✏️</button>
+                        <button class="btn btn-danger" onclick="deleteAppointment(${
+                          ap.id
+                        })">🗑️</button>
+                    </td>
+                </tr>
+            `
+          )
+          .join("");
+
+        contentDiv.innerHTML = `
+                <div class="section-header">
+                    <h2 class="section-title">Gestión de Citas</h2>
+                    <button class="btn btn-success" onclick="addAppointment()">➕ Nueva Cita</button>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr><th>Fecha</th><th>Hora</th><th>Mascota</th><th>Motivo</th><th>Estado</th><th>Acciones</th></tr>
+                    </thead>
+                    <tbody>${tableRows}</tbody>
+                </table>`;
+      }
+
+      // --- LÓGICA CRUD (CREATE, READ, UPDATE, DELETE) ---
+
+      // Mascotas
+      function addPet() {
+        openModal(
+          "Agregar Nueva Mascota",
+          `
+                <form id="petForm">
+                    <div class="form-group"><label>Nombre:</label><input type="text" id="petName" required></div>
+                    <div class="form-group"><label>Especie:</label><input type="text" id="petSpecies" required></div>
+                    <div class="form-group"><label>Raza:</label><input type="text" id="petBreed" required></div>
+                    <div class="form-group"><label>Edad:</label><input type="number" id="petAge" required></div>
+                    <div class="form-group"><label>Propietario:</label><input type="text" id="petOwner" required></div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Guardar</button>
+                </form>
+            `
+        );
+        document.getElementById("petForm").onsubmit = (e) => {
+          e.preventDefault();
+          const newPet = {
+            id: Date.now(), // ID único
+            name: document.getElementById("petName").value,
+            species: document.getElementById("petSpecies").value,
+            breed: document.getElementById("petBreed").value,
+            age: document.getElementById("petAge").value,
+            owner: document.getElementById("petOwner").value,
+          };
+          petsData.push(newPet);
+          renderPets();
+          closeModal();
+        };
+      }
+
+      function editPet(id) {
+        const pet = petsData.find((p) => p.id === id);
+        openModal(
+          "Editar Mascota",
+          `
+                <form id="petForm">
+                    <div class="form-group"><label>Nombre:</label><input type="text" id="petName" value="${pet.name}" required></div>
+                    <div class="form-group"><label>Especie:</label><input type="text" id="petSpecies" value="${pet.species}" required></div>
+                    <div class="form-group"><label>Raza:</label><input type="text" id="petBreed" value="${pet.breed}" required></div>
+                    <div class="form-group"><label>Edad:</label><input type="number" id="petAge" value="${pet.age}" required></div>
+                    <div class="form-group"><label>Propietario:</label><input type="text" id="petOwner" value="${pet.owner}" required></div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Actualizar</button>
+                </form>
+            `
+        );
+        document.getElementById("petForm").onsubmit = (e) => {
+          e.preventDefault();
+          pet.name = document.getElementById("petName").value;
+          pet.species = document.getElementById("petSpecies").value;
+          pet.breed = document.getElementById("petBreed").value;
+          pet.age = document.getElementById("petAge").value;
+          pet.owner = document.getElementById("petOwner").value;
+          renderPets();
+          closeModal();
+        };
+      }
+
+      function deletePet(id) {
+        if (confirm("¿Estás seguro de que quieres eliminar esta mascota?")) {
+          petsData = petsData.filter((p) => p.id !== id);
+          renderPets();
+        }
+      }
+
+      // Citas (se deja como ejercicio implementar add/edit/delete para citas)
+      function addAppointment() {
+        alert("Función no implementada.");
+      }
+      function editAppointment(id) {
+        alert("Función no implementada.");
+      }
+      function deleteAppointment(id) {
+        if (confirm("¿Estás seguro de que quieres eliminar esta cita?")) {
+          appointmentsData = appointmentsData.filter((a) => a.id !== id);
+          renderAppointments();
+        }
+      }
+
+      // --- FUNCIONES DE MODAL ---
+      function openModal(title, bodyContent) {
+        document.getElementById("modalTitle").textContent = title;
+        document.getElementById("modalBody").innerHTML = bodyContent;
+        document.getElementById("genericModal").classList.add("active");
+      }
+
+      function closeModal() {
+        document.getElementById("genericModal").classList.remove("active");
+        document.getElementById("modalBody").innerHTML = ""; // Limpiar contenido
+      }
+
+      // --- INICIALIZACIÓN ---
+      window.onload = () => {
+        updateAuthInterface();
+        showSection("home");
+      };
+
+      // Mostrar/ocultar formulario de registro
+      function toggleRegister(showRegister) {
+        document.getElementById("registerContainer").style.display =
+          showRegister ? "block" : "none";
+        document.getElementById("loginForm").parentElement.style.display =
+          showRegister ? "none" : "block";
+      }
+
+      // Registro de usuarios
+      document
+        .getElementById("registerForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const name = document.getElementById("registerName").value;
+          const email = document.getElementById("registerEmail").value;
+          const password = document.getElementById("registerPassword").value;
+
+          // Validar si el correo ya existe
+          const existingUser = mockUsers.find((u) => u.email === email);
+          if (existingUser) {
+            alert("El correo ya está registrado.");
+            return;
+          }
+
+          const newUser = {
+            id: Date.now(),
+            name,
+            email,
+            password,
+          };
+
+          mockUsers.push(newUser);
+          saveUsersToStorage(); // <-- Guarda en localStorage
+          toggleRegister(false);
+          document.getElementById("registerForm").reset();
+        });
+    </script>
+  </body>
+</html>
